@@ -131,8 +131,8 @@ const CreateProduk = () => {
                   value={nama} onChange={(e) => setNama(e.target.value)} />
               </div>
               <div className="form-group">
-                <label>Email</label>
-                <input placeholder="Email" name="email" type="number" className="form-control"
+                <label>Harga</label>
+                <input placeholder="Harga" name="harga" type="number" className="form-control"
                   value={harga} onChange={(e) => setHarga(e.target.value)} />
               </div>
               <br></br>

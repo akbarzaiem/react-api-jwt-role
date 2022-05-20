@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import swal from 'sweetalert';
+import { Form } from 'react-bootstrap'
+
 
 const CreateTransaksi = () => {
   let params = useParams();
@@ -10,20 +12,27 @@ const CreateTransaksi = () => {
   const [tgl, setTgl] = useState('');
   const [name, setName] = useState('');
   const [produk, setProduk] = useState('');
+  const [produks, setProduks] = useState([]);
   const [harga, setHarga] = useState('');
+
+  const [customers, setCustomers] = useState([]);
+  const [customer, setCustomer] = useState('');
+
+
+
+
   const [qty, setQty] = useState();
   const [token, setToken] = useState('');
   const [expired, setExpired] = useState('');
   const axiosJwt = axios.create();
-  const [roles, setRoles] = useState([]);
-  const [role, setRole] = useState('');
   const [roleToken, setRoleToken] = useState('');
   const history = useNavigate();
 
   useEffect(() => {
     refreshToken();
-    getRoles();
     cekId();
+    GetCustomer()
+    GetProduk()
     // eslint-disable-next-line
   }, []);
 
@@ -84,15 +93,35 @@ const CreateTransaksi = () => {
       setProduk(Transaksi.Produk);
       setHarga(Transaksi.harga);
       setQty(Transaksi.qty);
-      setRole(Transaksi.role);
     }
   };
 
-  const getRoles = async () => {
-    const response = await axios.get('http://localhost:5000/roles');
-    setRoles(response.data);
-    setRole(response.data[0].role);
-  };
+  const base_url = "http://localhost:5000/customers"
+  const GetCustomer = async () => {
+    const response = await axiosJwt.get(base_url, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    let Customer = response.data;
+    setCustomers(Customer);
+    console.log(Customer)
+
+  }
+
+  const base_url2 = "http://localhost:5000/produk"
+  const GetProduk = async () => {
+    const response = await axiosJwt.get(base_url2, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    let Produk = response.data;
+    setProduks(Produk);
+    console.log(Produk)
+
+  }
+
 
   const saveOrUpdateTransaksi = async e => {
     e.preventDefault();
@@ -104,7 +133,6 @@ const CreateTransaksi = () => {
         produk: produk,
         harga: harga,
         qty: qty,
-        role: role,
       };
       await axios
         .post('http://localhost:5000/transaksi', Transaksi, {
@@ -123,7 +151,6 @@ const CreateTransaksi = () => {
         produk: produk,
         harga: harga,
         qty: qty,
-        role: role,
       };
       await axios
         .put('http://localhost:5000/users/' + id, Transaksi2, {
@@ -150,29 +177,6 @@ const CreateTransaksi = () => {
     }
   }
 
-  function editRole() {
-    if (roleToken === 'admin') {
-      return (
-        <div className='form-group'>
-          <label>Select Roles</label>
-          <div className='controls'>
-            <select
-              className='form-control'
-              name='roles'
-              id='roles'
-              onChange={e => setRole(e.target.value)}
-              value={role}
-            >
-              {roles.map(role => (
-                <option key={role.id}>{role.role}</option>
-              ))}
-            </select>
-          </div>
-        </div>
-      );
-    }
-  }
-
   return (
     <div>
       <br></br>
@@ -194,36 +198,37 @@ const CreateTransaksi = () => {
                   onChange={e => setTgl(e.target.value)}
                 />
               </div>
-              <div className='form-group'>
-                <label>Names</label>
-                <input
-                  placeholder='Name'
-                  name='name'
-                  className='form-control'
-                  value={name}
-                  onChange={e => setName(e.target.value)}
-                />
+
+              <div className="field mt-5">
+                <label className="label">Nama Customer</label>
+                <div className="control">
+                  <div className="select">
+                    <select value={customer} onChange={(e) => setCustomer(e.target.value)}>
+                      <option value='0' disabled>Pilih customer</option>
+                      {
+                        customers.map((a) => (
+                          <option key={a.id} value={a.nama_customer}>{a.nama_customer}</option>
+                        ))
+                      }
+                    </select>
+                  </div>
+                </div>
               </div>
+
               <div className='form-group'>
-                <label>Produk</label>
-                <input
-                  placeholder='Produk'
-                  name='produk'
-                  className='form-control'
+                <Form.Select
+                  defaultValue={produk}
                   value={produk}
                   onChange={e => setProduk(e.target.value)}
-                />
+                >
+                  {produks.map(produk => (
+                    <option key={produk.id} value={produk.nama}>
+                      {produk.nama}  {produk.harga}
+                    </option>
+                  ))}
+                </Form.Select>
               </div>
-              <div className='form-group'>
-                <label>Harga</label>
-                <input
-                  placeholder='Harga'
-                  name='harga'
-                  className='form-control'
-                  value={harga}
-                  onChange={e => setHarga(e.target.value)}
-                />
-              </div>
+
               <div className='form-group'>
                 <label>Qty</label>
                 <input
@@ -234,7 +239,7 @@ const CreateTransaksi = () => {
                   onChange={e => setQty(e.target.value)}
                 />
               </div>
-              {editRole()}
+
 
               <br></br>
               <button

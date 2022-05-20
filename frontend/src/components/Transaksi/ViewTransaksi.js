@@ -69,7 +69,7 @@ const ViewTransaksi = () => {
     }
 
     function back() {
-        history('/transaksis');
+        history('/transactions');
     }
 
     function getTitle() {

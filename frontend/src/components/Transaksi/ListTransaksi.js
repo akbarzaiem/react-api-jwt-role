@@ -74,7 +74,7 @@ const ListTransaksi = () => {
   }
 
   function viewTransaksi(id) {
-    history(`/view-Transaksi/${id}`);
+    history(`/view-transaction/${id}`);
   }
 
   const deleteTransaksi = async (id) => {
