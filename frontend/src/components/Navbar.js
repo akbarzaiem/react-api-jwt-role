@@ -39,9 +39,9 @@ const Navbar = () => {
         history(`/add-User/` + id);
     }
 
-    function showRoles (){
+    function showRoles() {
         if (role === 'admin') {
-            return(
+            return (
                 <a href='/roles' className="navbar-item">
                     Roles
                 </a>
@@ -72,6 +72,9 @@ const Navbar = () => {
                         {showRoles()}
                         <a href='/produk' className="navbar-item">
                             Produk
+                        </a>
+                        <a href='/customers' className="navbar-item">
+                            Customer
                         </a>
                     </div>
 
