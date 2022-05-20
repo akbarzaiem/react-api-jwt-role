@@ -156,7 +156,7 @@ function App() {
             }
           ></Route>
           <Route
-            path='/add-customer/:id'
+            path='/view-customer/:id'
             element={
               <>
                 <Navbar />
