@@ -168,7 +168,7 @@ const CreateCustomer = () => {
           <div className='card-body'>
             <form>
               <div className='form-group'>
-                <label>Name </label>
+                <label>Names</label>
                 <input
                   placeholder='Name'
                   type='text'
