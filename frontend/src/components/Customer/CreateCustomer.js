@@ -34,7 +34,7 @@ const CreateCustomer = () => {
       setExpired(decode.exp);
       if (decode.role !== 'admin') {
         if (id != decode.customerId) {
-          history('/home');
+          history('/customers');
         }
       }
     } catch (error) {
@@ -72,7 +72,7 @@ const CreateCustomer = () => {
         },
       });
       let Customer = res.data;
-      console.log(Customer)
+      console.log(Customer);
       setId(Customer.id);
       setName(Customer.nama_customer);
       setEmail(Customer.email);
@@ -117,13 +117,13 @@ const CreateCustomer = () => {
         })
         .then(res => {
           swal(res.data.msg);
-          history('/home');
+          history('/customers');
         });
     }
   };
 
   function cancel() {
-    history('/home');
+    history('/customers');
   }
 
   function getTitle() {
@@ -189,7 +189,6 @@ const CreateCustomer = () => {
                   onChange={e => setEmail(e.target.value)}
                 />
               </div>
-
 
               <br></br>
               <button
