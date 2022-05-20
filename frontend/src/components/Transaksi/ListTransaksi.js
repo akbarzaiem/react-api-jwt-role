@@ -18,7 +18,7 @@ const ListTransaksi = () => {
 
   useEffect(() => {
     refreshToken();
-    getTranasaksis();
+    getTransaksis();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -62,19 +62,19 @@ const ListTransaksi = () => {
         Authorization: `Bearer ${token}`,
       },
     });
-    setTranasaksis(response.data);
+    setTransaksis(response.data);
   };
 
   function addTransaksi() {
     history("/add-Transaksi/_add");
   }
 
-  function editCustomer(id) {
-    history(`/add-Customer/${id}`);
+  function editTransaksi(id) {
+    history(`/add-Transaksi/${id}`);
   }
 
-  function viewCustomer(id) {
-    history(`/view-Customer/${id}`);
+  function viewTransaksi(id) {
+    history(`/view-Transaksi/${id}`);
   }
 
   const deleteTransaksi = async (id) => {
