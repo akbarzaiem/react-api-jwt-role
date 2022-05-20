@@ -195,7 +195,7 @@ const CreateCustomer = () => {
                 className='btn btn-success'
                 onClick={saveOrUpdateCustomer}
               >
-                Simpan
+                Save
               </button>
               <button className='btn btn-danger' onClick={cancel}>
                 Batal
