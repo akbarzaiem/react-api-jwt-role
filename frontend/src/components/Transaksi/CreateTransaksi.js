@@ -194,7 +194,7 @@ const CreateTransaksi = () => {
                 />
               </div>
               <div className='form-group'>
-                <label>Name</label>
+                <label>Names</label>
                 <input
                   placeholder='Name'
                   name='name'
