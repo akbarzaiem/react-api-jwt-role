@@ -66,14 +66,15 @@ const CreateCustomer = () => {
     if (id === '_add') {
       return;
     } else {
-      const res = await axiosJwt.get('http://localhost:5000/customers/' + id, {
+      const res = await axiosJwt.get('http://localhost:5000/customer/' + id, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       let Customer = res.data;
+      console.log(Customer)
       setId(Customer.id);
-      setName(Customer.name);
+      setName(Customer.nama_customer);
       setEmail(Customer.email);
       setRole(Customer.role);
     }
@@ -90,25 +91,23 @@ const CreateCustomer = () => {
 
     if (id === '_add') {
       let Customer = {
-        name: name,
+        nama_customer: name,
         email: email,
-        role: role,
       };
       await axios
-        .post('http://localhost:5000/addcustomer', Customer, {
+        .post('http://localhost:5000/customer', Customer, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         })
         .then(res => {
           swal(res.data.msg);
-          history('/home');
+          history('/customers');
         });
     } else {
       let Customer2 = {
-        name: name,
+        nama_customer: name,
         email: email,
-        role: role,
       };
       await axios
         .put('http://localhost:5000/customers/' + id, Customer2, {
@@ -172,6 +171,7 @@ const CreateCustomer = () => {
                 <label>Name </label>
                 <input
                   placeholder='Name'
+                  type='text'
                   name='name'
                   className='form-control'
                   value={name}
@@ -181,6 +181,7 @@ const CreateCustomer = () => {
               <div className='form-group'>
                 <label>Email</label>
                 <input
+                  type='text'
                   placeholder='Email'
                   name='email'
                   className='form-control'
@@ -188,7 +189,7 @@ const CreateCustomer = () => {
                   onChange={e => setEmail(e.target.value)}
                 />
               </div>
-              {editRole()}
+
 
               <br></br>
               <button
