@@ -186,6 +186,7 @@ const CreateTransaksi = () => {
               <div className='form-group'>
                 <label>Tgl</label>
                 <input
+                  type="date"
                   placeholder='Tgl'
                   name='tgl'
                   className='form-control'

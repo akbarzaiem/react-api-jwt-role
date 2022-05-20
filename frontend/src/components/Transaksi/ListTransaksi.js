@@ -4,10 +4,10 @@ import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import swal from "sweetalert";
 import DataTable from "react-data-table-component";
-import React from "react";
 
 const ListTransaksi = () => {
   // const [name, setName] = useState('');
+  const [transaksis, setTransaksis] = useState('');
   const [role, setRole] = useState("");
   const [token, setToken] = useState("");
   const [expired, setExpired] = useState("");
@@ -65,12 +65,12 @@ const ListTransaksi = () => {
     setTransaksis(response.data);
   };
 
-  function addTransaksi() {
-    history("/add-Transaksi/_add");
+  function addTransaksi(id) {
+    history("/add-transaction/_add");
   }
 
   function editTransaksi(id) {
-    history(`/add-Transaksi/${id}`);
+    history(`/edit-transaction/${id}`);
   }
 
   function viewTransaksi(id) {
