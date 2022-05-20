@@ -4,6 +4,7 @@ import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import swal from "sweetalert";
 import DataTable from "react-data-table-component";
+import React from "react";
 
 const ListTransaksi = () => {
   // const [name, setName] = useState('');
