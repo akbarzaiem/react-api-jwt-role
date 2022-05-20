@@ -10,7 +10,7 @@ const ListCustomer = () => {
   const [role, setRole] = useState("");
   const [token, setToken] = useState("");
   const [expired, setExpired] = useState("");
-  const [Customer, setCustomer] = useState([]);
+  const [customers, setCustomers] = useState([]);
   const history = useNavigate();
 
   const axiosJwt = axios.create();
@@ -56,12 +56,12 @@ const ListCustomer = () => {
   );
 
   const getCustomers = async () => {
-    const response = await axiosJwt.get("http://localhost:5000/customer", {
+    const response = await axiosJwt.get("http://localhost:5000/customers", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-    setCustomer(response.data);
+    setCustomers(response.data);
   };
 
   function addCustomer() {
@@ -79,14 +79,14 @@ const ListCustomer = () => {
   const deleteCustomer = async (id) => {
     var proceed = window.confirm("Apakah anda yakin hapus?");
     if (proceed) {
-      const response = await axiosJwt.delete("http://localhost:5000/Customer/" + id, {
+      const response = await axiosJwt.delete("http://localhost:5000/customer/" + id, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       swal(response.data.msg);
-      const NewCustomers = customer.filter((Customer) => Customer.id !== id);
-      setCustomer(NewCustomers);
+      const NewCustomers = customers.filter((Customer) => Customer.id !== id);
+      setCustomers(NewCustomers);
     } else {
       // swal('batal hapus');
     }
@@ -118,13 +118,13 @@ const ListCustomer = () => {
       width: "400px",
       cell: (row) => (
         <div>
-          <button onClick={() => editCustomer(row.id)} className="button is-default">
+          <button onClick={() => editCustomer(row.id)} className="button is-default mr-2">
             Edit
           </button>
-          <button style={{ marginleft: "10px" }} onClick={() => deleteCustomer(row.id)} className="button is-danger">
+          <button onClick={() => deleteCustomer(row.id)} className="button is-danger mr-2">
             Delete
           </button>
-          <button style={{ marginleft: "10px" }} onClick={() => viewCustomer(row.id)} className="button is-success">
+          <button onClick={() => viewCustomer(row.id)} className="button is-success mr-2">
             View
           </button>
         </div>
@@ -135,7 +135,7 @@ const ListCustomer = () => {
     },
   ];
 
-  const data = customer;
+  const data = customers;
 
   // const ExpandedComponent = ({ data }) => <pre>{JSON.stringify(data, null, 2)}</pre>;
 
