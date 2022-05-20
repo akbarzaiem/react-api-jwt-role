@@ -1,5 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import CreateUser from './components/CreateUser';
+import CreateCustomer from './components/Customer/CreateCustomer';
+import ListCustomer from './components/Customer/ListCustomer';
+import ViewCustomer from './components/Customer/ViewCustomer';
 import Footer from './components/Footer';
 import Home from './components/Home';
 import Login from './components/Login';
@@ -14,7 +17,6 @@ import ListRoles from './components/Roles/ListRoles';
 import ViewRoles from './components/Roles/ViewRoles';
 import ViewUser from './components/ViewUser';
 
-
 function App() {
   return (
     <div>
@@ -22,16 +24,147 @@ function App() {
         <Routes>
           <Route exact path='/' element={<Login />} />
           <Route path='/register' element={<Register />} />
-          <Route path='/home' element={<> <Navbar /><Home /><Footer /> </>} />
-          <Route path="/add-User/:id" element={<> <Navbar /><CreateUser /><Footer /> </>}></Route>
-          <Route path="/view-User/:id" element={<> <Navbar /><ViewUser /><Footer /> </>}></Route>
-          <Route path="/gantiPassword/:id" element={<> <Navbar /><ResetPassword /><Footer /> </>}></Route>
-          <Route path='/produk' element={<> <Navbar /><ListProduk /><Footer /> </>} />
-          <Route path="/add-Produk/:id" element={<> <Navbar /><CreateProduk /><Footer /> </>}></Route>
-          <Route path="/view-Produk/:id" element={<> <Navbar /><ViewProduk /><Footer /> </>}></Route>
-          <Route path='/roles' element={<> <Navbar /><ListRoles /><Footer /> </>} />
-          <Route path="/add-Roles/:id" element={<> <Navbar /><CreateRoles /><Footer /> </>}></Route>
-          <Route path="/view-Roles/:id" element={<> <Navbar /><ViewRoles /><Footer /> </>}></Route>
+          <Route
+            path='/home'
+            element={
+              <>
+                {' '}
+                <Navbar />
+                <Home />
+                <Footer />{' '}
+              </>
+            }
+          />
+          <Route
+            path='/add-User/:id'
+            element={
+              <>
+                {' '}
+                <Navbar />
+                <CreateUser />
+                <Footer />{' '}
+              </>
+            }
+          ></Route>
+          <Route
+            path='/view-User/:id'
+            element={
+              <>
+                {' '}
+                <Navbar />
+                <ViewUser />
+                <Footer />{' '}
+              </>
+            }
+          ></Route>
+          <Route
+            path='/gantiPassword/:id'
+            element={
+              <>
+                {' '}
+                <Navbar />
+                <ResetPassword />
+                <Footer />{' '}
+              </>
+            }
+          ></Route>
+          <Route
+            path='/produk'
+            element={
+              <>
+                {' '}
+                <Navbar />
+                <ListProduk />
+                <Footer />{' '}
+              </>
+            }
+          />
+          <Route
+            path='/add-Produk/:id'
+            element={
+              <>
+                {' '}
+                <Navbar />
+                <CreateProduk />
+                <Footer />{' '}
+              </>
+            }
+          ></Route>
+          <Route
+            path='/view-Produk/:id'
+            element={
+              <>
+                {' '}
+                <Navbar />
+                <ViewProduk />
+                <Footer />{' '}
+              </>
+            }
+          ></Route>
+          <Route
+            path='/roles'
+            element={
+              <>
+                {' '}
+                <Navbar />
+                <ListRoles />
+                <Footer />{' '}
+              </>
+            }
+          />
+          <Route
+            path='/add-Roles/:id'
+            element={
+              <>
+                {' '}
+                <Navbar />
+                <CreateRoles />
+                <Footer />{' '}
+              </>
+            }
+          ></Route>
+          <Route
+            path='/view-Roles/:id'
+            element={
+              <>
+                {' '}
+                <Navbar />
+                <ViewRoles />
+                <Footer />{' '}
+              </>
+            }
+          ></Route>
+
+          <Route
+            path='/customers'
+            element={
+              <>
+                <Navbar />
+                <ListCustomer />
+                <Footer />
+              </>
+            }
+          ></Route>
+          <Route
+            path='/add-customer/:id'
+            element={
+              <>
+                <Navbar />
+                <CreateCustomer />
+                <Footer />
+              </>
+            }
+          ></Route>
+          <Route
+            path='/add-customer/:id'
+            element={
+              <>
+                <Navbar />
+                <ViewCustomer />
+                <Footer />
+              </>
+            }
+          ></Route>
         </Routes>
       </BrowserRouter>
     </div>
