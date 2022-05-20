@@ -15,6 +15,9 @@ import ResetPassword from './components/ResetPassword';
 import CreateRoles from './components/Roles/CreateRoles';
 import ListRoles from './components/Roles/ListRoles';
 import ViewRoles from './components/Roles/ViewRoles';
+import CreateTransaksi from './components/Transaksi/CreateTransaksi';
+import ListTransaksi from './components/Transaksi/ListTransaksi';
+import ViewTransaksi from './components/Transaksi/ViewTransaksi';
 import ViewUser from './components/ViewUser';
 
 function App() {
@@ -161,6 +164,37 @@ function App() {
               <>
                 <Navbar />
                 <ViewCustomer />
+                <Footer />
+              </>
+            }
+          ></Route>
+
+          <Route
+            path='/transactions'
+            element={
+              <>
+                <Navbar />
+                <ListTransaksi />
+                <Footer />
+              </>
+            }
+          ></Route>
+          <Route
+            path='/add-transaction/:id'
+            element={
+              <>
+                <Navbar />
+                <CreateTransaksi />
+                <Footer />
+              </>
+            }
+          ></Route>
+          <Route
+            path='/view-transaction/:id'
+            element={
+              <>
+                <Navbar />
+                <ViewTransaksi />
                 <Footer />
               </>
             }
