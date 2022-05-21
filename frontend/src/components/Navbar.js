@@ -42,9 +42,21 @@ const Navbar = () => {
   function showRoles() {
     if (role === 'admin') {
       return (
-        <a href='/roles' className='navbar-item'>
-          Roles
-        </a>
+        <div className='navbar-start'>
+          <a href='/roles' className='navbar-item'>
+            Roles
+          </a>
+          <a href='/customers' className='navbar-item'>
+            Customer
+          </a>
+          <a href='/transactions' className='navbar-item'>
+            Transaksi
+          </a>
+
+        </div>
+
+
+
       );
     }
   }
@@ -79,16 +91,11 @@ const Navbar = () => {
             <a href='/home' className='navbar-item'>
               Home
             </a>
-            {showRoles()}
             <a href='/produk' className='navbar-item'>
               Produk
             </a>
-            <a href='/customers' className='navbar-item'>
-              Customer
-            </a>
-            <a href='/transactions' className='navbar-item'>
-              Transaksi
-            </a>
+            {showRoles()}
+
           </div>
 
           <div className='navbar-end'>

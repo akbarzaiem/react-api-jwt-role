@@ -6,6 +6,7 @@ import swal from 'sweetalert';
 import DataTable from 'react-data-table-component';
 
 const ListTransaksi = () => {
+  const [id, setId] = useState('');
   const [transaksis, setTransaksis] = useState('');
   const [token, setToken] = useState('');
   const [expired, setExpired] = useState('');
@@ -25,6 +26,13 @@ const ListTransaksi = () => {
       setToken(response.data.accessToken);
       const decode = jwt_decode(response.data.accessToken);
       setExpired(decode.exp);
+
+      if (decode.role !== 'admin') {
+        if (id != decode.userId) {
+          history('/home')
+        }
+
+      }
     } catch (error) {
       if (error.response) {
         history('/');

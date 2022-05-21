@@ -34,7 +34,7 @@ const CreateCustomer = () => {
       setExpired(decode.exp);
       if (decode.role !== 'admin') {
         if (id != decode.customerId) {
-          history('/customers');
+          history('/home');
         }
       }
     } catch (error) {
