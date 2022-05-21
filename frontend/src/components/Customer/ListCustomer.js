@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import jwt_decode from "jwt-decode";
-import { useNavigate } from "react-router-dom";
-import swal from "sweetalert";
-import DataTable from "react-data-table-component";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import jwt_decode from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
+import swal from 'sweetalert';
+import DataTable from 'react-data-table-component';
 
 const ListCustomer = () => {
-  // const [name, setName] = useState('');
-  const [role, setRole] = useState("");
-  const [token, setToken] = useState("");
-  const [expired, setExpired] = useState("");
+  const [role, setRole] = useState('');
+  const [token, setToken] = useState('');
+  const [expired, setExpired] = useState('');
   const [customers, setCustomers] = useState([]);
   const history = useNavigate();
 
@@ -18,29 +17,27 @@ const ListCustomer = () => {
   useEffect(() => {
     refreshToken();
     getCustomers();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const refreshToken = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/token");
+      const response = await axios.get('http://localhost:5000/token');
       setToken(response.data.accessToken);
       const decode = jwt_decode(response.data.accessToken);
-      // setName(decode.name);
       setRole(decode.role);
       setExpired(decode.exp);
     } catch (error) {
       if (error.response) {
-        history("/");
+        history('/');
       }
     }
   };
 
   axiosJwt.interceptors.request.use(
-    async (config) => {
+    async config => {
       const currentDate = new Date();
       if (expired * 1000 < currentDate.getTime()) {
-        const response = await axios.get("http://localhost:5000/token");
+        const response = await axios.get('http://localhost:5000/token');
         config.headers.Authorization = `Bearer ${response.data.accessToken}`;
         setToken(response.data.accessToken);
         const decode = jwt_decode(response.data.accessToken);
@@ -50,13 +47,13 @@ const ListCustomer = () => {
       }
       return config;
     },
-    (error) => {
+    error => {
       return Promise.reject(error);
     }
   );
 
   const getCustomers = async () => {
-    const response = await axiosJwt.get("http://localhost:5000/customers", {
+    const response = await axiosJwt.get('http://localhost:5000/customers', {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -65,27 +62,30 @@ const ListCustomer = () => {
   };
 
   function addCustomer() {
-    history("/add-Customer/_add");
+    history('/add-customer/_add');
   }
 
   function editCustomer(id) {
-    history(`/add-Customer/${id}`);
+    history(`/add-customer/${id}`);
   }
 
   function viewCustomer(id) {
-    history(`/view-Customer/${id}`);
+    history(`/view-customer/${id}`);
   }
 
-  const deleteCustomer = async (id) => {
-    var proceed = window.confirm("Apakah anda yakin hapus?");
+  const deleteCustomer = async id => {
+    var proceed = window.confirm('Apakah anda yakin hapus?');
     if (proceed) {
-      const response = await axiosJwt.delete("http://localhost:5000/customer/" + id, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axiosJwt.delete(
+        'http://localhost:5000/customer/' + id,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       swal(response.data.msg);
-      const NewCustomers = customers.filter((Customer) => Customer.id !== id);
+      const NewCustomers = customers.filter(Customer => Customer.id !== id);
       setCustomers(NewCustomers);
     } else {
       // swal('batal hapus');
@@ -94,37 +94,47 @@ const ListCustomer = () => {
 
   const columns = [
     {
-      name: "Id",
-      width: "50px",
-      cell: (row) => {
-        return <div>{row.id}</div>;
+      name: 'No',
+      width: '50px',
+      id: 'row',
+      cell: (row, index) => {
+        return <div>{index + 1}</div>;
       },
       shortable: true,
     },
     {
-      name: "Name",
-      selector: (row) => row.nama_customer,
-      width: "200px",
+      name: 'Name',
+      selector: row => row.nama_customer,
+      width: '200px',
       sortable: true,
     },
     {
-      name: "Email",
-      selector: (row) => row.email,
-      width: "200px",
+      name: 'Email',
+      selector: row => row.email,
+      width: '200px',
       sortable: true,
     },
     {
-      name: "Action",
-      width: "400px",
-      cell: (row) => (
+      name: 'Action',
+      width: '400px',
+      cell: row => (
         <div>
-          <button onClick={() => editCustomer(row.id)} className="button is-default mr-2">
+          <button
+            onClick={() => editCustomer(row.id)}
+            className='button is-default mr-2'
+          >
             Edit
           </button>
-          <button onClick={() => deleteCustomer(row.id)} className="button is-danger mr-2">
+          <button
+            onClick={() => deleteCustomer(row.id)}
+            className='button is-danger mr-2'
+          >
             Delete
           </button>
-          <button onClick={() => viewCustomer(row.id)} className="button is-success mr-2">
+          <button
+            onClick={() => viewCustomer(row.id)}
+            className='button is-success mr-2'
+          >
             View
           </button>
         </div>
@@ -143,7 +153,7 @@ const ListCustomer = () => {
     return (
       <div>
         <h3>Data Customer</h3>
-        <button onClick={addCustomer} className="button is-info">
+        <button onClick={addCustomer} className='button is-info'>
           Add Customer
         </button>
         <DataTable columns={columns} data={data} pagination />
@@ -152,7 +162,7 @@ const ListCustomer = () => {
   }
 
   return (
-    <div className="container mt-5">
+    <div className='container mt-5'>
       <h1>Customer</h1>
       <hr></hr>
       {MyComponent()}
