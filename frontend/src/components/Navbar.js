@@ -43,8 +43,30 @@ const Navbar = () => {
     if (role === 'admin') {
       return (
         <div className='navbar-start'>
+          <a href='/home' className='navbar-item'>
+            Home
+          </a>
+          <a href='/produk' className='navbar-item'>
+            Produk
+          </a>
           <a href='/roles' className='navbar-item'>
             Roles
+          </a>
+          <a href='/transactions' className='navbar-item'>
+            Transaksi
+          </a>
+
+        </div>
+      );
+    }
+    else if (role === 'user') {
+      return (
+        <div className='navbar-start'>
+          <a href='/home' className='navbar-item'>
+            Home
+          </a>
+          <a href='/produk' className='navbar-item'>
+            Produk
           </a>
           <a href='/customers' className='navbar-item'>
             Customer
@@ -54,9 +76,6 @@ const Navbar = () => {
           </a>
 
         </div>
-
-
-
       );
     }
   }
@@ -88,12 +107,7 @@ const Navbar = () => {
 
         <div id='navbarBasicExample' className='navbar-menu'>
           <div className='navbar-start'>
-            <a href='/home' className='navbar-item'>
-              Home
-            </a>
-            <a href='/produk' className='navbar-item'>
-              Produk
-            </a>
+
             {showRoles()}
 
           </div>
