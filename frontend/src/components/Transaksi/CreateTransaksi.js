@@ -7,15 +7,15 @@ import { Form } from 'react-bootstrap';
 
 const CreateTransaksi = () => {
   let params = useParams();
+  const date = new Date(), today = (date.getFullYear()) + '-' + (date.getMonth() + 1) + '-' + (date.getDate() + 1)
+  const tanggal = new Date(today).toISOString().split('T')[0]
   const [id, setId] = useState(params.id);
   const [customers, setCustomers] = useState([]);
   const [produks, setProduks] = useState([]);
-  // const [customer, setCustomer] = useState('');
-  // const [produk, setProduk] = useState('');
-  const [tgl, setTgl] = useState('');
+  const [tgl, setTgl] = useState(tanggal);
   const [namaCustomer, setNamaCustomer] = useState('');
   const [namaProduk, setNamaProduk] = useState('');
-  const [hargaProduk, setHargaProduk] = useState(0);
+  const [hargaProduk, setHargaProduk] = useState('');
   const [qty, setQty] = useState(0);
   const [token, setToken] = useState('');
   const [expired, setExpired] = useState('');
@@ -77,6 +77,7 @@ const CreateTransaksi = () => {
         Authorization: `Bearer ${token}`,
       },
     });
+    setNamaCustomer(response.data[0].nama_customer);
     setCustomers(response.data);
   };
 
@@ -87,7 +88,7 @@ const CreateTransaksi = () => {
       },
     });
     setProduks(response.data);
-    setHargaProduk(response.data[0].harga);
+    setNamaProduk(response.data[0].nama);
   };
 
   const getTransactionById = async () => {
@@ -144,6 +145,17 @@ const CreateTransaksi = () => {
     }
   };
 
+  const cekValueInputHarga = () => {
+    produks.map(cekHargaProduk)
+    // console.log(produks)
+  }
+
+  function cekHargaProduk(item) {
+    if (namaProduk === item.nama) {
+      setHargaProduk(item.harga)
+    }
+  }
+
   const cancel = () => {
     history('/transactions');
   };
@@ -173,7 +185,6 @@ const CreateTransaksi = () => {
               <div className='form-group'>
                 <label>Nama Customer</label>
                 <Form.Select
-                  defaultValue={namaCustomer}
                   value={namaCustomer}
                   onChange={e => setNamaCustomer(e.target.value)}
                 >
@@ -186,19 +197,27 @@ const CreateTransaksi = () => {
               </div>
 
               <div className='form-group'>
-                <label>Nama Produk</label>
+                <label >Produk</label>
                 <Form.Select
-                  defaultValue={namaProduk}
                   value={namaProduk}
                   onChange={e => setNamaProduk(e.target.value)}
+                  onClick={() => cekValueInputHarga()}
+
                 >
                   {produks.map(produk => (
                     <option key={produk.id} value={produk.nama}>
                       {produk.nama}
+
                     </option>
+
                   ))}
                 </Form.Select>
               </div>
+
+
+
+
+
 
               <div className='form-group'>
                 <label>Harga Produk</label>
@@ -209,6 +228,7 @@ const CreateTransaksi = () => {
                   className='form-control'
                   value={hargaProduk}
                   onChange={e => setHargaProduk(e.target.value)}
+                  disabled
                 />
               </div>
 
