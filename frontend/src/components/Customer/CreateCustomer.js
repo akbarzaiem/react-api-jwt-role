@@ -9,13 +9,13 @@ const CreateCustomer = () => {
   const [id, setId] = useState(params.id);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const history = useNavigate();
   const [token, setToken] = useState('');
   const [expired, setExpired] = useState('');
-  const axiosJwt = axios.create();
   const [roles, setRoles] = useState([]);
   const [role, setRole] = useState('');
   const [roleToken, setRoleToken] = useState('');
+  const history = useNavigate();
+  const axiosJwt = axios.create();
 
   useEffect(() => {
     refreshToken();
@@ -131,29 +131,6 @@ const CreateCustomer = () => {
       return <h3 className='text-center'>Add Customer</h3>;
     } else {
       return <h3 className='text-center'>Update Customer</h3>;
-    }
-  }
-
-  function editRole() {
-    if (roleToken === 'admin') {
-      return (
-        <div className='form-group'>
-          <label>Select Roles</label>
-          <div className='controls'>
-            <select
-              className='form-control'
-              name='roles'
-              id='roles'
-              onChange={e => setRole(e.target.value)}
-              value={role}
-            >
-              {roles.map(role => (
-                <option key={role.id}>{role.role}</option>
-              ))}
-            </select>
-          </div>
-        </div>
-      );
     }
   }
 
