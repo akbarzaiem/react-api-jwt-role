@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
@@ -26,22 +26,24 @@ const CreateProduk = () => {
         history('/');
       }
     }
-  }
+  };
 
-  axiosJwt.interceptors.request.use(async (config) => {
-    const currentDate = new Date();
-    if (expired * 1000 < currentDate.getTime()) {
-      const response = await axios.get('http://localhost:5000/token');
-      config.headers.Authorization = `Bearer ${response.data.accessToken}`;
-      setToken(response.data.accessToken);
-      const decode = jwt_decode(response.data.accessToken);
-      // setName(decode.name);
-      setExpired(decode.exp);
+  axiosJwt.interceptors.request.use(
+    async config => {
+      const currentDate = new Date();
+      if (expired * 1000 < currentDate.getTime()) {
+        const response = await axios.get('http://localhost:5000/token');
+        config.headers.Authorization = `Bearer ${response.data.accessToken}`;
+        setToken(response.data.accessToken);
+        const decode = jwt_decode(response.data.accessToken);
+        // setName(decode.name);
+        setExpired(decode.exp);
+      }
+      return config;
+    },
+    error => {
+      return Promise.reject(error);
     }
-    return config;
-  }, (error) => {
-    return Promise.reject(error);
-  }
   );
 
   useEffect(() => {
@@ -54,96 +56,108 @@ const CreateProduk = () => {
     if (id === '_add') {
       setNama('');
       setHarga(0);
-      return
+      return;
     } else {
       const res = await axiosJwt.get('http://localhost:5000/Produk/' + id, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
       let Produk = res.data;
       setId(Produk.id);
       setNama(Produk.nama);
       setHarga(Produk.harga);
     }
+  };
 
-  }
-
-  const saveOrUpdateProduk = async (e) => {
+  const saveOrUpdateProduk = async e => {
     e.preventDefault();
     let Produk = {
       nama: nama,
       harga: harga,
-    }
+    };
 
     if (id === '_add') {
-      await axios.post('http://localhost:5000/Produk', Produk,
-        {
+      await axios
+        .post('http://localhost:5000/Produk', Produk, {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         })
         .then(res => {
           swal(res.data.msg);
           history('/produk');
         });
     } else {
-      await axios.put('http://localhost:5000/Produk/' + id, Produk,
-        {
+      await axios
+        .put('http://localhost:5000/Produk/' + id, Produk, {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         })
         .then(res => {
           swal(res.data.msg);
           history('/produk');
         });
-
     }
-  }
-
+  };
 
   function cancel() {
     history('/produk');
   }
 
   function getTitle() {
-    if (id === "_add") {
-      return <h3 className="text-center">Add Produk</h3>
+    if (id === '_add') {
+      return <h3 className='text-center'>Add Produk</h3>;
     } else {
-      return <h3 className="text-center">Update Produk</h3>
+      return <h3 className='text-center'>Update Produk</h3>;
     }
   }
 
   return (
     <div>
       <br></br>
-      <div className="container">
-        <div className="row">
-          <div className="card col-md-6 offset-md-3 offset-md-3">
+      <div className='container'>
+        <div className='row'>
+          <div className='card col-md-6 offset-md-3 offset-md-3'>
             {getTitle()}
           </div>
-          <div className="card-body">
+          <div className='card-body'>
             <form>
-              <div className="form-group">
+              <div className='form-group'>
                 <label>Name </label>
-                <input placeholder="Name" name="name" className="form-control"
-                  value={nama} onChange={(e) => setNama(e.target.value)} />
+                <input
+                  placeholder='Name'
+                  name='name'
+                  className='form-control'
+                  value={nama}
+                  onChange={e => setNama(e.target.value)}
+                />
               </div>
-              <div className="form-group">
+              <div className='form-group'>
                 <label>Harga</label>
-                <input placeholder="Harga" name="harga" type="number" className="form-control"
-                  value={harga} onChange={(e) => setHarga(e.target.value)} />
+                <input
+                  placeholder='Harga'
+                  name='harga'
+                  type='number'
+                  className='form-control'
+                  value={harga}
+                  onChange={e => setHarga(e.target.value)}
+                />
               </div>
               <br></br>
-              <button className="btn btn-success" onClick={saveOrUpdateProduk} >Simpan</button>
-              <button className="btn btn-danger" onClick={cancel}>Batal</button>
+              <button className='btn btn-success' onClick={saveOrUpdateProduk}>
+                Simpan
+              </button>
+              <button className='btn btn-danger' onClick={cancel}>
+                Batal
+              </button>
             </form>
           </div>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CreateProduk
+export default CreateProduk;

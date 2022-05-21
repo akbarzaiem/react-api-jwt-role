@@ -34,33 +34,35 @@ const ListProduk = () => {
         history('/');
       }
     }
-  }
+  };
 
-  axiosJwt.interceptors.request.use(async (config) => {
-    const currentDate = new Date();
-    if (expired * 1000 < currentDate.getTime()) {
-      const response = await axios.get('http://localhost:5000/token');
-      config.headers.Authorization = `Bearer ${response.data.accessToken}`;
-      setToken(response.data.accessToken);
-      const decode = jwt_decode(response.data.accessToken);
-      // setName(decode.name);
-      setRole(decode.role);
-      setExpired(decode.exp);
+  axiosJwt.interceptors.request.use(
+    async config => {
+      const currentDate = new Date();
+      if (expired * 1000 < currentDate.getTime()) {
+        const response = await axios.get('http://localhost:5000/token');
+        config.headers.Authorization = `Bearer ${response.data.accessToken}`;
+        setToken(response.data.accessToken);
+        const decode = jwt_decode(response.data.accessToken);
+        // setName(decode.name);
+        setRole(decode.role);
+        setExpired(decode.exp);
+      }
+      return config;
+    },
+    error => {
+      return Promise.reject(error);
     }
-    return config;
-  }, (error) => {
-    return Promise.reject(error);
-  }
   );
 
   const getProduks = async () => {
     const response = await axiosJwt.get('http://localhost:5000/produk', {
       headers: {
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     });
     setProduk(response.data);
-  }
+  };
 
   function addProduk() {
     history('/add-Produk/_add');
@@ -74,61 +76,78 @@ const ListProduk = () => {
     history(`/view-Produk/${id}`);
   }
 
-  const deleteProduk = async (id) => {
-
-
+  const deleteProduk = async id => {
     var proceed = window.confirm('Apakah anda yakin hapus?');
     if (proceed) {
-      const response = await axiosJwt.delete('http://localhost:5000/Produk/' + id, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const response = await axiosJwt.delete(
+        'http://localhost:5000/Produk/' + id,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
+      );
       swal(response.data.msg);
       const NewProduks = produk.filter(Produk => Produk.id !== id);
       setProduk(NewProduks);
     } else {
       // swal('batal hapus');
     }
-  }
+  };
+
+  const numberWithComas = harga => {
+    return harga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  };
 
   const columns = [
     {
-      name: 'Id',
+      name: 'No',
       width: '50px',
-      cell: (row) => {
-        return <div>{row.id}</div>;
+      id: 'row',
+      cell: (row, index) => {
+        return <div>{index + 1}</div>;
       },
-      shortable: true
+      shortable: true,
     },
     {
       name: 'Name',
       selector: row => row.nama,
       width: '200px',
-      sortable: true
+      sortable: true,
     },
     {
       name: 'Harga',
-      selector: row => row.harga,
+      selector: row => numberWithComas(row.harga),
       width: '200px',
-      sortable: true
+      sortable: true,
     },
     {
       name: 'Action',
       width: '400px',
-      cell: (row) =>
+      cell: row => (
         <div>
-          <button onClick={() => editProduk(row.id)}
-            className='button is-default'>Edit</button>
-          <button style={{ marginleft: "10px" }}
+          <button
+            onClick={() => editProduk(row.id)}
+            className='button is-default'
+          >
+            Edit
+          </button>
+          <button
+            style={{ marginleft: '10px' }}
             onClick={() => deleteProduk(row.id)}
-            className='button is-danger'>Delete</button>
-          <button style={{ marginleft: "10px" }}
+            className='button is-danger'
+          >
+            Delete
+          </button>
+          <button
+            style={{ marginleft: '10px' }}
             onClick={() => viewProduk(row.id)}
-            className='button is-success'>View</button>
-
+            className='button is-success'
+          >
+            View
+          </button>
         </div>
-      ,
+      ),
       ignoreRowClick: true,
       allowOverflow: true,
       button: true,
@@ -140,28 +159,24 @@ const ListProduk = () => {
   // const ExpandedComponent = ({ data }) => <pre>{JSON.stringify(data, null, 2)}</pre>;
 
   function MyComponent() {
-      return (
-        <div>
-          <h3>Data Produk</h3>
-          <button onClick={addProduk} className='button is-info'>Add Produk</button>
-          <DataTable
-            columns={columns}
-            data={data}
-            pagination
-          />
-        </div>
-      );
-  };
+    return (
+      <div>
+        <h3>Data Produk</h3>
+        <button onClick={addProduk} className='button is-info'>
+          Add Produk
+        </button>
+        <DataTable columns={columns} data={data} pagination />
+      </div>
+    );
+  }
 
   return (
     <div className='container mt-5'>
       <h1>Produk</h1>
       <hr></hr>
       {MyComponent()}
-
-
     </div>
-  )
-}
+  );
+};
 
-export default ListProduk
+export default ListProduk;
