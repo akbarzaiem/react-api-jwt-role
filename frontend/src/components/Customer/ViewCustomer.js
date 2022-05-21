@@ -20,7 +20,7 @@ const ViewCustomer = () => {
       const decode = jwt_decode(response.data.accessToken);
       //   setName(decode.name);
       setExpired(decode.exp);
-      if (decode.role !== 'admin') {
+      if (decode.role !== 'user') {
         if (id != decode.userId) {
           history('/home')
         }

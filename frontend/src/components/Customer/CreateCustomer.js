@@ -32,10 +32,11 @@ const CreateCustomer = () => {
 
       setRoleToken(decode.role);
       setExpired(decode.exp);
-      if (decode.role !== 'admin') {
-        if (id != decode.customerId) {
-          history('/home');
+      if (decode.role !== 'user') {
+        if (id != decode.userId) {
+          history('/home')
         }
+
       }
     } catch (error) {
       if (error.response) {

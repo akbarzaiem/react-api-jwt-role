@@ -25,12 +25,12 @@ const ViewTransaksi = () => {
             //   setName(decode.name);
             setExpired(decode.exp);
 
-            if (decode.role !== 'admin') {
-                if (id != decode.userId) {
-                    history('/home')
-                }
+            // if (decode.role !== 'admin') {
+            //     if (id != decode.userId) {
+            //         history('/home')
+            //     }
 
-            }
+            // }
         } catch (error) {
             if (error.response) {
                 history('/');

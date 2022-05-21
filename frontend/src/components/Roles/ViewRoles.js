@@ -14,17 +14,23 @@ const ViewRoles = () => {
 
     const refreshToken = async () => {
         try {
-          const response = await axios.get('http://localhost:5000/token');
-          setToken(response.data.accessToken);
-          const decode = jwt_decode(response.data.accessToken);
-        //   setName(decode.name);
-          setExpired(decode.exp);
+            const response = await axios.get('http://localhost:5000/token');
+            setToken(response.data.accessToken);
+            const decode = jwt_decode(response.data.accessToken);
+            //   setName(decode.name);
+            setExpired(decode.exp);
+            if (decode.role !== 'admin') {
+                if (id != decode.userId) {
+                    history('/home')
+                }
+
+            }
         } catch (error) {
-          if (error.response) {
-            history('/');
-          }
+            if (error.response) {
+                history('/');
+            }
         }
-      }
+    }
 
     axiosJwt.interceptors.request.use(async (config) => {
         const currentDate = new Date();
@@ -45,18 +51,18 @@ const ViewRoles = () => {
     useEffect(() => {
         refreshToken();
         cekId();
-            // eslint-disable-next-line
+        // eslint-disable-next-line
     }, []);
 
     const cekId = async () => {
-            const res = await axiosJwt.get('http://localhost:5000/Roles/' + id, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            let User = res.data;
-            setId(User.id);
-            setRole(User.role);
+        const res = await axiosJwt.get('http://localhost:5000/Roles/' + id, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        let User = res.data;
+        setId(User.id);
+        setRole(User.role);
     }
 
     function cancel() {

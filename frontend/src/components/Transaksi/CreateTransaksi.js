@@ -39,11 +39,11 @@ const CreateTransaksi = () => {
       // setUserId(decode.userId);
       // setRoleToken(decode.role);
       setExpired(decode.exp);
-      if (decode.role !== 'admin') {
-        if (id != decode.userId) {
-          history('/home');
-        }
-      }
+      // if (decode.role !== 'admin') {
+      //   if (id != decode.userId) {
+      //     history('/home');
+      //   }
+      // }
     } catch (error) {
       if (error.response) {
         history('/');

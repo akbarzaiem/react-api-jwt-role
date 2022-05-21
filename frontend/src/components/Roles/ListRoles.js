@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import swal from 'sweetalert';
 import DataTable from 'react-data-table-component';
 
 const ListRoles = () => {
   // const [name, setName] = useState('');
+  let params = useParams();
+  const [id, setId] = useState(params.id);
   const [role, setRole] = useState('');
   const [token, setToken] = useState('');
   const [expired, setExpired] = useState('');
@@ -29,6 +31,12 @@ const ListRoles = () => {
       // setName(decode.name);
       setRole(decode.role);
       setExpired(decode.exp);
+      if (decode.role !== 'admin') {
+        if (id != decode.userId) {
+          history('/home')
+        }
+
+      }
     } catch (error) {
       if (error.response) {
         history('/');

@@ -27,7 +27,7 @@ const ListCustomer = () => {
       const decode = jwt_decode(response.data.accessToken);
       setRole(decode.role);
       setExpired(decode.exp);
-      if (decode.role !== 'admin') {
+      if (decode.role !== 'user') {
         if (id != decode.userId) {
           history('/home')
         }
