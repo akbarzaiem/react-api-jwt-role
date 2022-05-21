@@ -3,36 +3,30 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import swal from 'sweetalert';
-import { Form } from 'react-bootstrap'
-
+import { Form } from 'react-bootstrap';
 
 const CreateTransaksi = () => {
   let params = useParams();
   const [id, setId] = useState(params.id);
-  const [tgl, setTgl] = useState('');
-  const [name, setName] = useState('');
-  const [produk, setProduk] = useState('');
-  const [produks, setProduks] = useState([]);
-  const [harga, setHarga] = useState('');
-
   const [customers, setCustomers] = useState([]);
-  const [customer, setCustomer] = useState('');
-
-
-
-
-  const [qty, setQty] = useState();
+  const [produks, setProduks] = useState([]);
+  // const [customer, setCustomer] = useState('');
+  // const [produk, setProduk] = useState('');
+  const [tgl, setTgl] = useState('');
+  const [namaCustomer, setNamaCustomer] = useState('');
+  const [namaProduk, setNamaProduk] = useState('');
+  const [hargaProduk, setHargaProduk] = useState(0);
+  const [qty, setQty] = useState(0);
   const [token, setToken] = useState('');
   const [expired, setExpired] = useState('');
-  const axiosJwt = axios.create();
-  const [roleToken, setRoleToken] = useState('');
   const history = useNavigate();
+  const axiosJwt = axios.create();
 
   useEffect(() => {
     refreshToken();
-    cekId();
-    GetCustomer()
-    GetProduk()
+    getTransactionById();
+    getCustomers();
+    getProduks();
     // eslint-disable-next-line
   }, []);
 
@@ -43,7 +37,7 @@ const CreateTransaksi = () => {
       const decode = jwt_decode(response.data.accessToken);
       // setName(decode.name);
       // setUserId(decode.userId);
-      setRoleToken(decode.role);
+      // setRoleToken(decode.role);
       setExpired(decode.exp);
       if (decode.role !== 'admin') {
         if (id != decode.userId) {
@@ -67,7 +61,7 @@ const CreateTransaksi = () => {
         const decode = jwt_decode(response.data.accessToken);
         // setName(decode.name);
         // setUserId(decode.userId);
-        setRoleToken(decode.role);
+        // setRoleToken(decode.role);
         setExpired(decode.exp);
       }
       return config;
@@ -77,7 +71,26 @@ const CreateTransaksi = () => {
     }
   );
 
-  const cekId = async () => {
+  const getCustomers = async () => {
+    const response = await axiosJwt.get('http://localhost:5000/customers', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    setCustomers(response.data);
+  };
+
+  const getProduks = async () => {
+    const response = await axiosJwt.get('http://localhost:5000/produk', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    setProduks(response.data);
+    setHargaProduk(response.data[0].harga);
+  };
+
+  const getTransactionById = async () => {
     if (id === '_add') {
       return;
     } else {
@@ -86,56 +99,29 @@ const CreateTransaksi = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      let Transaksi = res.data;
-      setId(Transaksi.id);
-      setName(Transaksi.name);
-      setTgl(Transaksi.tgl);
-      setProduk(Transaksi.Produk);
-      setHarga(Transaksi.harga);
-      setQty(Transaksi.qty);
+      let Transaction = res.data;
+      setId(Transaction.id);
+      setTgl(Transaction.tgl);
+      setNamaCustomer(Transaction.nama_customer);
+      setNamaProduk(Transaction.produk);
+      setHargaProduk(Transaction.harga);
+      setQty(Transaction.qty);
+      console.log(Transaction);
     }
   };
 
-  const base_url = "http://localhost:5000/customers"
-  const GetCustomer = async () => {
-    const response = await axiosJwt.get(base_url, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-    let Customer = response.data;
-    setCustomers(Customer);
-    console.log(Customer)
-
-  }
-
-  const base_url2 = "http://localhost:5000/produk"
-  const GetProduk = async () => {
-    const response = await axiosJwt.get(base_url2, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-    let Produk = response.data;
-    setProduks(Produk);
-    console.log(Produk)
-
-  }
-
-
-  const saveOrUpdateTransaksi = async e => {
+  const saveOrUpdateTransaction = async e => {
     e.preventDefault();
-
+    let Transaction = {
+      tgl: tgl,
+      nama_customer: namaCustomer,
+      produk: namaProduk,
+      harga: hargaProduk,
+      qty: qty,
+    };
     if (id === '_add') {
-      let Transaksi = {
-        tgl: tgl,
-        nama_customer: name,
-        produk: produk,
-        harga: harga,
-        qty: qty,
-      };
       await axios
-        .post('http://localhost:5000/transaksi', Transaksi, {
+        .post('http://localhost:5000/transaksi', Transaction, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -145,15 +131,8 @@ const CreateTransaksi = () => {
           history('/transactions');
         });
     } else {
-      let Transaksi2 = {
-        tgl: tgl,
-        nama_customer: name,
-        produk: produk,
-        harga: harga,
-        qty: qty,
-      };
       await axios
-        .put('http://localhost:5000/users/' + id, Transaksi2, {
+        .put('http://localhost:5000/transaksi/' + id, Transaction, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -165,17 +144,9 @@ const CreateTransaksi = () => {
     }
   };
 
-  function cancel() {
+  const cancel = () => {
     history('/transactions');
-  }
-
-  function getTitle() {
-    if (id === '_add') {
-      return <h3 className='text-center'>Add Transaksi</h3>;
-    } else {
-      return <h3 className='text-center'>Update Transaksi</h3>;
-    }
-  }
+  };
 
   return (
     <div>
@@ -183,15 +154,15 @@ const CreateTransaksi = () => {
       <div className='container'>
         <div className='row'>
           <div className='card col-md-6 offset-md-3 offset-md-3'>
-            {getTitle()}
+            {/* {getTitle()} */}
           </div>
           <div className='card-body'>
             <form>
               <div className='form-group'>
                 <label>Tgl</label>
                 <input
-                  type="date"
                   placeholder='Tgl'
+                  type='date'
                   name='tgl'
                   className='form-control'
                   value={tgl}
@@ -199,39 +170,52 @@ const CreateTransaksi = () => {
                 />
               </div>
 
-              <div className="field mt-5">
-                <label className="label">Nama Customer</label>
-                <div className="control">
-                  <div className="select">
-                    <select value={customer} onChange={(e) => setCustomer(e.target.value)}>
-                      <option value='0' disabled>Pilih customer</option>
-                      {
-                        customers.map((a) => (
-                          <option key={a.id} value={a.nama_customer}>{a.nama_customer}</option>
-                        ))
-                      }
-                    </select>
-                  </div>
-                </div>
-              </div>
-
               <div className='form-group'>
+                <label>Nama Customer</label>
                 <Form.Select
-                  defaultValue={produk}
-                  value={produk}
-                  onChange={e => setProduk(e.target.value)}
+                  defaultValue={namaCustomer}
+                  value={namaCustomer}
+                  onChange={e => setNamaCustomer(e.target.value)}
                 >
-                  {produks.map(produk => (
-                    <option key={produk.id} value={produk.nama}>
-                      {produk.nama}  {produk.harga}
+                  {customers.map(customer => (
+                    <option key={customer.id} value={customer.nama_customer}>
+                      {customer.nama_customer}
                     </option>
                   ))}
                 </Form.Select>
               </div>
 
               <div className='form-group'>
+                <label>Nama Produk</label>
+                <Form.Select
+                  defaultValue={namaProduk}
+                  value={namaProduk}
+                  onChange={e => setNamaProduk(e.target.value)}
+                >
+                  {produks.map(produk => (
+                    <option key={produk.id} value={produk.nama}>
+                      {produk.nama}
+                    </option>
+                  ))}
+                </Form.Select>
+              </div>
+
+              <div className='form-group'>
+                <label>Harga Produk</label>
+                <input
+                  type='text'
+                  placeholder='Harga'
+                  name='harga'
+                  className='form-control'
+                  value={hargaProduk}
+                  onChange={e => setHargaProduk(e.target.value)}
+                />
+              </div>
+
+              <div className='form-group'>
                 <label>Qty</label>
                 <input
+                  type='number'
                   placeholder='Qty'
                   name='qty'
                   className='form-control'
@@ -239,14 +223,12 @@ const CreateTransaksi = () => {
                   onChange={e => setQty(e.target.value)}
                 />
               </div>
-
-
               <br></br>
               <button
                 className='btn btn-success'
-                onClick={saveOrUpdateTransaksi}
+                onClick={saveOrUpdateTransaction}
               >
-                Simpan
+                Save
               </button>
               <button className='btn btn-danger' onClick={cancel}>
                 Batal
