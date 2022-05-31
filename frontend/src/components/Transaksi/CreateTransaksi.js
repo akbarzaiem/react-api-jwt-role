@@ -7,12 +7,17 @@ import { Form } from 'react-bootstrap';
 
 const CreateTransaksi = () => {
   let params = useParams();
-  const date = new Date(), today = (date.getFullYear()) + '-' + (date.getMonth() + 1) + '-' + (date.getDate() + 1)
-  const tanggal = new Date(today).toISOString().split('T')[0]
+  // const date = new Date(), today = (date.getFullYear()) + '-' + (date.getMonth() + 1) + '-' + (date.getDate() + 1)
+  // const tanggal = new Date(today).toISOString().split('T')[0]
+  var today = new Date();
+  var dd = String(today.getDate()).padStart(2, '0');
+  var mm = String(today.getMonth() + 1).padStart(2, '0');
+  var yyyy = today.getFullYear();
+  today = yyyy + '-' + mm + '-' + dd;
   const [id, setId] = useState(params.id);
   const [customers, setCustomers] = useState([]);
   const [produks, setProduks] = useState([]);
-  const [tgl, setTgl] = useState(tanggal);
+  const [tgl, setTgl] = useState(today);
   const [namaCustomer, setNamaCustomer] = useState('');
   const [namaProduk, setNamaProduk] = useState('');
   const [hargaProduk, setHargaProduk] = useState('');
